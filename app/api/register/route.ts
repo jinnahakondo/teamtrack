@@ -1,4 +1,5 @@
 import { connectDb } from "@/lib/db/dbConnection";
+import { sendError, sendSuccess } from "@/lib/helperFunction";
 import User from "@/models/user.model";
 
 export async function POST(request: Request) {
@@ -8,16 +9,19 @@ export async function POST(request: Request) {
 
         const newUser = await User.create(payload);
 
-        return new Response(JSON.stringify({ message: "User registered successfully", newUser }), {
-            status: 201,
+        return sendSuccess({
+            data: newUser,
+            message: "User registered successfully",
+            status: 201
         });
 
 
 
-    } catch (error) {
-        return new Response(JSON.stringify({ message: "registration failed", error }), {
-            status: 500,
-
-        });
+    } catch (error: any) {
+        return sendError({
+            message: "Failed to register user",
+            errormessage: error.message,
+            status: 500
+        })
     }
 }
