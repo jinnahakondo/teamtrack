@@ -3,7 +3,7 @@ import { connectDb } from "@/lib/db/dbConnection";
 import { sendError, sendSuccess } from "@/lib/helperFunction";
 import User from "@/models/user.model";
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await params;
 

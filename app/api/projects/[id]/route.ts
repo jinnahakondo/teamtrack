@@ -7,16 +7,16 @@ import Project from "@/models/project.model";
 // GET a single project by ID - accessible to all authenticated users
 export async function GET(
     _req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const auth = await verifyRole();
+        const auth = await verifyRole("admin", "project_manager", "team_member");
 
         if (!auth.authorized) {
             return auth.response;
         }
 
-        const id = await params.id;
+        const { id } = await params;
 
         await connectDb();
 
@@ -44,7 +44,7 @@ export async function GET(
 // only Admin or Project Manager can access this route
 export async function PATCH(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
 
@@ -54,7 +54,7 @@ export async function PATCH(
             return auth.response;
         }
 
-        const id = await params.id;
+        const { id } = await params;
 
         const userId = auth?.user!.id;
 
@@ -130,7 +130,7 @@ export async function PATCH(
 // Admin only can delete a project
 export async function DELETE(
     _req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const auth = await verifyRole("admin");
@@ -139,7 +139,7 @@ export async function DELETE(
             return auth.response;
         }
 
-        const id = await params.id;
+        const { id } = await params;
 
         const userId = auth?.user!.id;
 
