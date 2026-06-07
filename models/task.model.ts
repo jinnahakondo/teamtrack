@@ -10,9 +10,16 @@ export interface ITask extends Document {
     status: "todo" | "in_progress" | "completed";
     assignedTo: mongoose.Types.ObjectId;
     createdBy: mongoose.Types.ObjectId;
+    priorityOrder: number;
     createdAt: Date;
     updatedAt: Date;
 }
+
+const priorityWeight: Record<string, number> = {
+    high: 3,
+    medium: 2,
+    low: 1,
+};
 
 const TaskSchema = new Schema<ITask>(
     {
@@ -40,6 +47,10 @@ const TaskSchema = new Schema<ITask>(
             enum: ["high", "medium", "low"],
             default: "medium",
         },
+        priorityOrder: {
+            type: Number,
+            default: priorityWeight.medium,
+        },
         status: {
             type: String,
             enum: ["todo", "in_progress", "completed"],
@@ -58,6 +69,12 @@ const TaskSchema = new Schema<ITask>(
     },
     { timestamps: true }
 );
+
+TaskSchema.pre("save", function () {
+    if (this.isModified("priority") || this.isNew) {
+        this.priorityOrder = priorityWeight[this.priority] ?? priorityWeight.medium;
+    }
+});
 
 // Prevent duplicate task titles within the same project
 TaskSchema.index({ projectId: 1, title: 1 }, { unique: true });

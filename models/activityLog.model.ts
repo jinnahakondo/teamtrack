@@ -36,7 +36,7 @@ const ActivityLogSchema = new Schema<IActivityLog>(
             type: String,
             required: [true, "Description is required"],
             trim: true,
-            // e.g. 'Task "Setup API" assigned to John'
+            
         },
     },
     { timestamps: { createdAt: true, updatedAt: false } }
