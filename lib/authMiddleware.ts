@@ -11,7 +11,6 @@ export type SessionUser = {
 
 export const verifyRole = async (...roles: SessionUser["role"][]) => {
     const session = await getServerSession(authOptions);
-    console.log("session:", session);
 
     // 1. if user is not logged in (401 Unauthorized)
     if (!session?.user) {

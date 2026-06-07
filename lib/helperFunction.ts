@@ -8,7 +8,8 @@ export const sendSuccess = ({ data, message, status }: ApiSuccessResponse) => {
 export const sendError = ({ message, status, errormessage }: ApiErrorResponse) => {
     return NextResponse.json({
         success: false,
-        message, errormessage
+        message,
+        errormessage
     },
         { status });
 }   
